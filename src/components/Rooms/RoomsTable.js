@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
+import useRoom from '../../hooks/useRoom';
 import RoomTableItem from './RoomTableItem';
 
 const columns = [
@@ -21,7 +22,7 @@ const columns = [
 function RoomsTable(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [roomsData, setRoomsData] = React.useState([])
+    const { roomData } = useRoom();
 
 
     const handleChangePage = (event, newPage) => {
@@ -33,12 +34,6 @@ function RoomsTable(props) {
         setPage(0);
     };
 
-
-    React.useEffect(() => {
-        fetch('https://61f92889783c1d0017c449b5.mockapi.io/api/v1/rooms')
-            .then(res => res.json())
-            .then(res => setRoomsData(res))
-    }, [])
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden', boxShadow: 'none', borderRadius: '10px' }}>
@@ -58,7 +53,7 @@ function RoomsTable(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {roomsData
+                        {roomData
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
                                 return (
@@ -73,7 +68,7 @@ function RoomsTable(props) {
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={roomsData.length}
+                count={roomData.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

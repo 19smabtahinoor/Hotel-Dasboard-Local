@@ -1,38 +1,19 @@
 import { FormControl, Grid, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import useCustomers from '../../hooks/useCustomers';
 import CountrySelect from '../CountrySelect';
 import FormButton from '../FormButton';
 
 
 
 
-
 function AddCustomerForm() {
-    const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
     const [country, setCountry] = React.useState('');
+    const { onSubmit } = useCustomers();
 
-    const onSubmit = data => {
-        data['country'] = country
-        axios.post('https://61f92889783c1d0017c449b5.mockapi.io/api/v1/customers', data)
-            .then(res => {
-                if (res?.data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'New Customer Added',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(res => {
-                        navigate('/customers')
-                    })
-                }
-            })
-    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

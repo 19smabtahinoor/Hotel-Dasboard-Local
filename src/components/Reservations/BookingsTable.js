@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
+import useReservation from '../../hooks/useReservation';
 import BookingTableItem from './BookingTableItem';
 
 const columns = [
@@ -22,7 +23,7 @@ const columns = [
 function BookingsTable(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [bookingData, setBookingData] = React.useState([])
+    const { reservationData } = useReservation();
 
 
     const handleChangePage = (event, newPage) => {
@@ -33,12 +34,6 @@ function BookingsTable(props) {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-
-    React.useEffect(() => {
-        fetch('https://61f92889783c1d0017c449b5.mockapi.io/api/v1/bookings')
-            .then(res => res.json())
-            .then(res => setBookingData(res))
-    }, [])
 
 
     return (
@@ -59,7 +54,7 @@ function BookingsTable(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {bookingData
+                        {reservationData
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((row, index) => {
                                 return (
@@ -75,7 +70,7 @@ function BookingsTable(props) {
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={bookingData.length}
+                count={reservationData?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

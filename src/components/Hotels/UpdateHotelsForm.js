@@ -1,45 +1,29 @@
 import { FormControl, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+// import { useNavigate } from 'react-router-dom';
+import useHotel from '../../hooks/useHotel';
 import FormButton from '../FormButton';
 
 function UpdateHotelsForm({ id}) {
     const [hotelData,setHotelData] = React.useState({})
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
+    const { updateHotel } = useHotel()
 
     React.useEffect(() => {
-        axios.get(`https://61f92889783c1d0017c449b5.mockapi.io/api/v1/hotels/${id}`)
-        .then(res => setHotelData(res?.data))
+        const prevData = JSON?.parse(localStorage.getItem('hotels'))
+        const signleData = prevData?.find(item => item?.id === id)
+        setHotelData(signleData)
 
-    })
+    },[id])
 
 
     
-    const onSubmit = data => {
-        
-        axios.put(`https://61f92889783c1d0017c449b5.mockapi.io/api/v1/hotels/${id}`, data)
-            .then(res => {
-                if (res?.data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Updated Done!!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(res => {
-                        navigate('/hotels')
-                    })
-                }
-            })
-    };
-
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}> 
+        <form onSubmit={handleSubmit(updateHotel)}> 
 
             {/* hotel name and code  */}
             <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} sx={{ marginBottom: 3 }}>

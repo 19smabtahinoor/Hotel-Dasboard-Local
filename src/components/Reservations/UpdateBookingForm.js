@@ -1,10 +1,8 @@
 import { FormControl, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import useReservation from '../../hooks/useReservation';
 import BookingDatePicker from '../BookingDatePicker';
 import BookingDateRangePicker from '../BookingDateRangePicker';
 import FormButton from '../FormButton';
@@ -13,40 +11,24 @@ import FormButton from '../FormButton';
 
 function UpdateBookingForm({ id }) {
      const [bookingData, setBookingData] = React.useState({})
-    const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
     const [currentDate, setCurrentDate] = React.useState(null);
     const [value, setValue] = React.useState([null, null]);
     // const [currentDate, setCurrentDate] = React.useState(bookingData?.bookingDate?.toLocaleDateString());
     // const [value, setValue] = React.useState([bookingData?.startDate?.toLocaleDateString(), bookingData?.endDate?.toLocaleDateString()]);
+    const { updateReservation } = useReservation()
 
     React.useEffect(() => {
-        axios.get(`https://61f92889783c1d0017c449b5.mockapi.io/api/v1/bookings/${id}`)
-            .then(res => setBookingData(res?.data))
+        const prevData = JSON?.parse(localStorage.getItem('reservations'))
+        const signleData = prevData?.find(item => item?.id === id)
+        setBookingData(signleData)
 
-    })
+    }, [id])
 
-        const onSubmit = data => {
-            data['bookingDate'] = currentDate?.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
-            data['startDate'] = value[0]?.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
-            data['endDate'] = value[1]?.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
-            axios.put(`https://61f92889783c1d0017c449b5.mockapi.io/api/v1/bookings/${id}`, data)
-            .then(res => {
-                if (res?.data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Updated Done!!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(res => {
-                        navigate('/reservations')
-                    })
-                }
-            })
-    };
+    
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(updateReservation)}>
 
             {/* first name and surname  */}
             <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} sx={{ marginBottom: 3 }}>

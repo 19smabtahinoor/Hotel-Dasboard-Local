@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
+import useHotel from '../../hooks/useHotel';
 import HotelTableItem from './HotelTableItem';
 
 const columns = [
@@ -22,7 +23,7 @@ const columns = [
 function HotelsTable(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [hotelsData,setHotelsData] = React.useState([])
+    const { hotelData } = useHotel();
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -32,12 +33,6 @@ function HotelsTable(props) {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-
-    React.useEffect(() => {
-        fetch('https://61f92889783c1d0017c449b5.mockapi.io/api/v1/hotels')
-        .then(res => res.json())
-            .then(res => setHotelsData(res))
-    },[])
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden', boxShadow: 'none', borderRadius: '10px' }}>
@@ -57,9 +52,9 @@ function HotelsTable(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {hotelsData
-                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row,index) => (
+                        {hotelData
+                            ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            ?.map((row,index) => (
                                 <TableRow hover role="checkbox" tabIndex={-1} key={row?.id}>
                                     <HotelTableItem row={row} index={index} />
                                 </TableRow>
@@ -70,7 +65,7 @@ function HotelsTable(props) {
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={hotelsData.length}
+                count={hotelData?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}

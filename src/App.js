@@ -1,5 +1,9 @@
 import React from 'react';
 import { Route, Routes } from "react-router-dom";
+import CustomersProvider from './contexts/CustomersProvider';
+import HotelProvider from './contexts/HotelProvider';
+import ReservationProvider from './contexts/ReservationProvider';
+import RoomProvider from './contexts/RoomProvider';
 import Dashboard from './Dashboard';
 import AddCustomerPage from './pages/Customers/AddCustomerPage';
 import Customers from './pages/Customers/Customers';
@@ -18,6 +22,10 @@ import UpdateRoomPage from './pages/Rooms/UpdateRoomPage';
 export default function App () {
     return (
         <div>
+            <HotelProvider>
+            <RoomProvider>
+            <CustomersProvider>
+            <ReservationProvider>
             <Routes>
                 <Route path="/" element={<Dashboard />} />
 
@@ -56,6 +64,10 @@ export default function App () {
 
                 </Route>
             </Routes>
+            </ReservationProvider>
+            </CustomersProvider>
+            </RoomProvider>
+            </HotelProvider>
         </div>
     );
 }

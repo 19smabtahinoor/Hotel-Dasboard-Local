@@ -1,10 +1,8 @@
 import { FormControl, Grid, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import useReservation from '../../hooks/useReservation';
 import BookingDatePicker from '../BookingDatePicker';
 import BookingDateRangePicker from '../BookingDateRangePicker';
 import FormButton from '../FormButton';
@@ -12,30 +10,10 @@ import FormButton from '../FormButton';
 
 
 function AddBookingForm(props) {
-    const [currentDate, setCurrentDate] = React.useState(null);
     const [value, setValue] = React.useState([null, null]);
-    const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
+    const { onSubmit, setCurrentDate, currentDate } = useReservation();
 
-    const onSubmit = data => {
-        data['bookingDate'] = currentDate?.toLocaleDateString(undefined,{ year: "numeric", month: "long", day: "numeric" });
-        data['startDate'] = value[0]?.toLocaleDateString(undefined,{ year: "numeric", month: "long", day: "numeric" });
-        data['endDate'] = value[1]?.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
-
-        axios.post('https://61f92889783c1d0017c449b5.mockapi.io/api/v1/bookings', data)
-            .then(res => {
-                if (res?.data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'New Reservation Added',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(res => {
-                        navigate('/reservations')
-                    })
-                }
-            })
-    };
 
 
     return (

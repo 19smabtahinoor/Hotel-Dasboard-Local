@@ -1,31 +1,14 @@
 import { FormControl, Grid, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import useHotel from '../../hooks/useHotel';
 import FormButton from '../FormButton';
 
 function AddHotelsForm() {
-    const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
-    
-    const onSubmit = data => {
-        axios.post('https://61f92889783c1d0017c449b5.mockapi.io/api/v1/hotels', data)
-            .then(res => {
-                if (res?.data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'New Hotel Added',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(res => {
-                        navigate('/hotels')
-                    })
-                }
-            })
-    };
+    const {  onSubmit } = useHotel();
+   
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

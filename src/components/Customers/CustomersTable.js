@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import * as React from 'react';
+import useCustomers from '../../hooks/useCustomers';
 import CustomerTableItem from './CustomerTableItem';
 
 const columns = [
@@ -26,7 +27,7 @@ const columns = [
 function CustomersTable(props) {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [customersData, setCustomersData] = React.useState([])
+    const { customersData } = useCustomers();
 
 
     const handleChangePage = (event, newPage) => {
@@ -38,11 +39,6 @@ function CustomersTable(props) {
         setPage(0);
     };
 
-    React.useEffect(() => {
-        fetch('https://61f92889783c1d0017c449b5.mockapi.io/api/v1/customers')
-            .then(res => res.json())
-            .then(res => setCustomersData(res))
-    }, [])
 
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden', boxShadow: 'none', borderRadius: '10px' }}>

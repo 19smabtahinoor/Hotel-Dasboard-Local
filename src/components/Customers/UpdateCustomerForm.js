@@ -1,46 +1,28 @@
 import { FormControl, Grid, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import React from 'react';
 import { useForm } from "react-hook-form";
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import useCustomers from '../../hooks/useCustomers';
 import CountrySelect from '../CountrySelect';
 import FormButton from '../FormButton';
 
 function UpdateCustomerForm({ id }) {
     const [customerData,setCustomerData] = React.useState({})
-    const navigate = useNavigate()
     const { register, handleSubmit } = useForm();
     const [country, setCountry] = React.useState('');
+    const { updateCustomer } = useCustomers()
 
     React.useEffect(() => {
-        axios.get(`https://61f92889783c1d0017c449b5.mockapi.io/api/v1/customers/${id}`)
-        .then(res => setCustomerData(res?.data))
-    })
+        const prevData = JSON?.parse(localStorage.getItem('customers'))
+        const signleData = prevData?.find(item => item?.id === id)
+        setCustomerData(signleData)
 
+    }, [id])
 
-    
-    const onSubmit = data => {
-        data['country'] = country
-        axios.put(`https://61f92889783c1d0017c449b5.mockapi.io/api/v1/customers/${id}`, data)
-            .then(res => {
-                if (res?.data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Updated Done!!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(res => {
-                        navigate('/customers')
-                    })
-                }
-            })
-    };
 
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(updateCustomer)}>
 
             {/* first name and surname  */}
             <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 8, md: 12, lg: 12 }} sx={{ marginBottom: 3 }}>

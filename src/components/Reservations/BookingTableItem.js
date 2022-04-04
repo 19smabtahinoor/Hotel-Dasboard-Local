@@ -1,29 +1,14 @@
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import { Box, TableCell, Typography } from '@mui/material';
-import axios from 'axios';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import useReservation from '../../hooks/useReservation';
 
 function BookingTableItem({ row, index }) {
     const navigate = useNavigate()
+    const { handleDelete } = useReservation();
 
-    const handleDelete = (id) => {
-        axios.delete(`https://61f92889783c1d0017c449b5.mockapi.io/api/v1/bookings/${id}`)
-            .then(res => {
-                if (res?.data) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Deleted !!',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(res => {
-                        window.location.reload()
-                    })
-                }
-            })
-    }
 
     return (
         <>
@@ -66,7 +51,7 @@ function BookingTableItem({ row, index }) {
             <TableCell>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
                     <EditIcon sx={{ marginRight: 1, cursor: 'pointer' }} onClick={() => navigate(`/reservations/updateReservation/${row?.id}`)} />
-                    <DeleteOutlineIcon sx={{ cursor: 'pointer' }} onClick={() => handleDelete(row?.id)} />
+                    <DeleteOutlineIcon sx={{ cursor: 'pointer' }} onClick={() => handleDelete(row?.code)} />
                 </Box>
             </TableCell>
         </>
